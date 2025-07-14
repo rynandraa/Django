@@ -10,9 +10,18 @@
             <div class="mb-3">
                 <label for="{{field.id_for_label}}">{{field.label}}</label>
                 {% if field.name == 'content' %}
-                    <textarea name="{{field.name}}" class="form-control"></textarea>
+                    <textarea
+                        name="{{ field.name }}"
+                        class="form-control"
+                        rows="5">{{ field.value|default_if_none:'' }}
+                    </textarea>
                 {% else %}
-                    <input type="{{field.field.widget.input_type}}" name = {{field.name}} value={{field.value}}>
+                    <input
+                        type="{{ field.field.widget.input_type }}"
+                        name="{{ field.name }}"
+                        value="{{ field.value|default_if_none:'' }}"
+                        class="form-control"
+                    />
                 {% endif %}
             
             </div>

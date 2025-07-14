@@ -9,16 +9,67 @@
 
     <style>
         body {
-            background-color:rgb(223, 233, 248);
+            background-color:#eef2f5;
         }
 
         .content-section{
-            background: white;
-            padding: 20px;
-            border-radius:15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0,1);
-            margin-botom:20px;
+            position: relative;
+            background: #ffffff;
+            padding: 24px 28px;
+            border-radius: 18px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
         }
+        .content-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 2px; /* stroke lebih tegas */
+            background: linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0));
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .content-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .content-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .content-section:hover::after {
+        opacity: 1;
+        }
+
+        .content-section .btn {
+            position: relative;
+            z-index: 2;
+        }
+        .content-section .stretched-link {
+            z-index: 1;
+        }
+
+        /* Tambahan untuk tombol benar-benar di atas */
+        .content-section .btn-group {
+             position: relative;  /* menjamin stacking context */
+            z-index: 3;          /* lebih tinggi dari stretched-link */
+        }
+
     </style>
 </head>
 <body>
@@ -27,8 +78,8 @@
             <a class="navbar-brand" href="{% url 'home' %}">Wedoo Community</a>
             <div class="navbar-nav">
                 {% if user.is_authenticated %}
-                <a href="{%url 'profile' %}">Profile</a>
-                <a href="{%url 'login' %}">Logout</a>
+                <a href="{%url 'profile' %}" class="btn btn-outline-primary me-2 navbar-btn">Profile</a>
+                <a href="{%url 'logout' %}" class="btn btn-danger">Logout</a>
                 {% else %}
                 <a href="{%url 'login' %}">Login</a>
                 <a href="{%url 'register' %}">Register</a>
