@@ -1,25 +1,32 @@
 {% extends "blog/base.html" %}
-
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="content-section">
-    <form method="POST">
-        {% csrf_token %}
-        <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Join Today</legend>
-            {{form|crispy}}
-        </fieldset>
-        <div class='form-group'>
-            <button class="btn btn-primary" type="submit">Sign Up</button>
-        </div> 
-    </form>
-    <div >
-        <small>Already have an account? <a href="{% url 'login'%}">Sign In</a> </small>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow rounded-4">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4">Daftar Akun</h2>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button class="btn btn-primary" type="submit">Daftar</button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <small class="text-muted">
+                            Sudah punya akun? 
+                            <a href="{% url 'login' %}" class="text-decoration-none">Login Sekarang</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-
-
 </div>
-
 {% endblock content %}

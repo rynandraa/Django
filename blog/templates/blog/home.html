@@ -1,10 +1,10 @@
 {% extends "blog/base.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container py-5">  <!-- Tambah padding atas bawah -->
     <div class="row mb-4">
         <div class="col">
-            <h1 class="display-6 fw-bold">Wedoo Post</h1>
+            <h1 class="display-6 fw-bold mb-0">Wedoo Post</h1>
         </div>
         <div class="col text-end">
             <a href="{% url 'post-create' %}" class="btn btn-primary">Buat Postingan Baru</a>
@@ -13,7 +13,7 @@
 
     <div class="row g-4">
         {% for post in posts %}
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4"> <!-- Tambah margin bottom -->
             <div class="card shadow-sm h-100 rounded-4">
                 {% if post.image %}
                 <img src="{{ post.image.url }}"
@@ -21,9 +21,9 @@
                     style="object-fit:cover; object-position:center; width:100%; height:220px;"
                     alt="Gambar {{ post.title }}">
                 {% endif %}
-                <div class="card-body position-relative">
-                    <h5 class="card-title">{{ post.title }}</h5>
-                    <p class="card-text text-truncate" style="max-height: 3.6em;">{{ post.content }}</p>
+                <div class="card-body position-relative p-4"> <!-- Tambah padding dalam card -->
+                    <h5 class="card-title mb-3">{{ post.title }}</h5> <!-- Tambah margin bottom -->
+                    <p class="card-text text-truncate mb-4" style="max-height: 3.6em;">{{ post.content }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">{{ post.created_at|date:"d M Y H:i" }}</small>
                         <a href="{% url 'post-detail' post.slug %}" class="stretched-link"></a>
@@ -32,7 +32,7 @@
             </div>
         </div>
         {% empty %}
-        <div class="col">
+        <div class="col mt-4"> <!-- Tambah margin top -->
             <div class="alert alert-info">Belum ada postingan.</div>
         </div>
         {% endfor %}

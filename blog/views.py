@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.decorators.cache import never_cache
 from django.views.generic.detail import DetailView
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 
 # Create your views here.
@@ -94,3 +96,9 @@ class PostDetailView(DetailView):
     context_object_name = 'post'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
+    return redirect('home')
