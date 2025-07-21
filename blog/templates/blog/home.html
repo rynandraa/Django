@@ -17,6 +17,9 @@
     <div class="col-md-6 mb-4">
         <div class="content-section position-relative">
         <h2>{{ post.title }}</h2>
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="img-fluid mb-2" alt="Post image">
+        {% endif %}
         <p>{{ post.content }}</p>
         <div class="d-flex justify-content-between align-items-center">
             <small>{{ post.created_at }}</small>
@@ -27,7 +30,7 @@
                 {% endif %}
             </div>
         </div>
-        <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+        <a href="{% url 'post-detail' post.slug %}" class="stretched-link"></a>
         </div>
     </div>
     {% endfor %}
