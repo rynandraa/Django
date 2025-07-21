@@ -1,38 +1,59 @@
-{%extends "blog/base.html"%}
+{% extends "blog/base.html" %}
+{% load widget_tweaks %}
 
-{%block content%}
-
-<div class='content-section'>
-    <h1 class='mb-4'>New Post</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="mb-3">
-                <label for="{{field.id_for_label}}">{{field.label}}</label>
-                {% if field.name == 'content' %}
-                    <textarea
-                        name="{{ field.name }}"
-                        class="form-control"
-                        rows="5">{{ field.value|default_if_none:'' }}
-                    </textarea>
-                {% else %}
-                    <input
-                        type="{{ field.field.widget.input_type }}"
-                        name="{{ field.name }}"
-                        value="{{ field.value|default_if_none:'' }}"
-                        class="form-control"
-                    />
-                {% endif %}
-            
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow rounded-4">
+                <div class="card-body">
+                    <h2 class="mb-4">{% if post %}Edit{% else %}Buat{% endif %} Postingan</h2>
+                    
+                    <form method="post" enctype="multipart/form-data"
+                        x-data="{ imageUrl: '{% if post.image %}{{ post.image.url }}{% endif %}' }">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            {{ form.title.label_tag }}
+                            {{ form.title|add_class:"form-control" }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.content.label_tag }}
+                            {{ form.content|add_class:"form-control" }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.image.label_tag }}
+                            <input type="file" 
+                                name="image" 
+                                id="id_image" 
+                                class="form-control"
+                                accept="image/*"
+                                @change="imageUrl = URL.createObjectURL($event.target.files[0])">
+                            
+                            <template x-if="imageUrl">
+                                <div class="mt-3">
+                                    <img :src="imageUrl" 
+                                        alt="Preview Gambar" 
+                                        class="img-fluid rounded-4" 
+                                        style="max-height:220px;">
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            {% if post %}
+                                <a href="{% url 'post-detail' post.slug %}" class="btn btn-secondary">Batal</a>
+                            {% else %}
+                                <a href="{% url 'home' %}" class="btn btn-secondary">Batal</a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
             </div>
-        
-        {% endfor %}
-        <div>
-            <button type='submit' class='btn btn-primary'>Save Post</button>
-            <a href="{% url 'home' %}" class="btn btn-primary" >Cancel</a>
         </div>
-
-    </form>
+    </div>
 </div>
-
 {% endblock %}

@@ -17,18 +17,19 @@ class Post(models.Model):
     created_at =models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     slug = models.SlugField(max_length=255, unique=True)
-    image = models.ImageField(upload_to=post_image_upload_to, blank=True, null=True)
+    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
 
     def __str__(self):
         return self.title
         
     def get_absolute_url(self):
-        return reverse("post-detail", args=[str(self.id)])
+        return reverse('post-detail', kwargs={'slug': self.slug})
     
     def update_created_at_time(self):
         self.created_at = timezone.now()
 
     def save(self, *args, **kwargs):
+        # Jika ini post baru tanpa slug
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)

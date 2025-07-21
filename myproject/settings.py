@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     "blog",
     "django_extensions",
     "users",
@@ -130,8 +131,12 @@ STATICFILES_DIR = (os.path.join(BASE_DIR, 'static'))
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Media
-MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Tambahkan di development untuk serving media files
+if DEBUG:
+    MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
 
 # Crispy Forms settings
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"

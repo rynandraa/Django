@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.decorators.cache import never_cache
+from django.views.generic.detail import DetailView
 
 
 # Create your views here.
@@ -33,11 +34,42 @@ class PostCreateView(CreateView):
 
 
 #Update Post
-class PostUpdateView(UpdateView, LoginRequiredMixin, UserPassesTestMixin):
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     template_name = "blog/post_form.html"
-    fields = ["title", "content"]
+    fields = ["title", "content", "image"]
     success_url = reverse_lazy("home")
+
+    def form_valid(self, form):
+        # Debug info
+        print("FILES:", self.request.FILES)
+        print("POST:", self.request.POST)
+        
+        # Ambil instance yang akan diupdate
+        self.object = form.save(commit=False)
+        
+        if 'image' in self.request.FILES:
+            # Jika ada gambar baru
+            if self.object.image:
+                # Simpan referensi gambar lama
+                old_image = Post.objects.get(pk=self.object.pk).image
+                try:
+                    # Hapus gambar lama
+                    old_image.delete(save=False)
+                except Exception as e:
+                    print(f"Error deleting old image: {e}")
+            
+            # Set gambar baru
+            self.object.image = self.request.FILES['image']
+        else:
+            # Jika tidak ada gambar baru, pertahankan gambar lama
+            if self.object.pk:
+                original = Post.objects.get(pk=self.object.pk)
+                self.object.image = original.image
+        
+        # Simpan perubahan
+        self.object.save()
+        return super().form_valid(form)
 
     def test_func(self):
         post = self.get_object()
@@ -53,7 +85,9 @@ class PostDeleteView(DeleteView, LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author or self.request.user.is_staff
+    
 
+#Post Detail View
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
